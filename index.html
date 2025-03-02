@@ -24,8 +24,8 @@
         }
 
         canvas {
-            width: 250px !important;
-            height: 250px !important;
+            width: 300px !important;
+            height: 300px !important;
             max-width: 100%;
         }
     </style>
@@ -61,6 +61,12 @@
         </tr>
     </table>
 
+    <!-- Charts Row -->
+    <div class="chart-container">
+        <canvas id="massChart"></canvas>
+        <canvas id="calorieChart"></canvas>
+    </div>
+
     <!-- Nutrient Breakdown Table -->
     <table style="width:100%">
         <tr>
@@ -74,12 +80,6 @@
         <tr><td>水</td><td id="water"></td><td>-</td></tr>
         <tr><td>灰分</td><td id="ash"></td><td>-</td></tr>
     </table>
-
-    <!-- Charts Row -->
-    <div class="chart-container">
-        <canvas id="massChart"></canvas>
-        <canvas id="calorieChart"></canvas>
-    </div>
 
     <script>
         let foodData = [];
@@ -198,8 +198,8 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Mass',  // Chart Title
-                        font: { size: 16 }
+                        text: '重量',  // Chart Title
+                        font: { size: 24 }
                     }
                 }
             }
@@ -220,8 +220,8 @@
                 plugins: {
                     title: {
                         display: true,
-                        text: 'Calorie',  // Chart Title
-                        font: { size: 16 }
+                        text: '熱量',  // Chart Title
+                        font: { size: 24 }
                     },
                     tooltip: {
                         callbacks: {
