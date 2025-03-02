@@ -13,6 +13,24 @@
         th { background-color: #f2f2f2; }
         .dropdown-container { margin-bottom: 20px; }
         .chart-container { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
+
+
+        /* New Styles for Responsive Charts */
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;  /* Allows stacking on small screens */
+            justify-content: center;
+            gap: 20px;
+            max-width: 100%; /* Prevents overflow */
+            margin: auto;
+        }
+
+        canvas {
+            width: 250px !important;  /* Reduce size */
+            height: 250px !important; /* Reduce size */
+            max-width: 100%;  /* Ensure it scales properly */
+        }
+        
     </style>
 </head>
 <body>
@@ -63,10 +81,9 @@
 
     <!-- Charts Row -->
     <div class="chart-container">
-        <canvas id="massChart" width="300" height="300"></canvas>
-        <canvas id="calorieChart" width="300" height="300"></canvas>
+        <canvas id="massChart"></canvas>
+        <canvas id="calorieChart"></canvas>
     </div>
-
     <script>
         let foodData = [];
         let categorySelect = document.getElementById('categorySelect');
