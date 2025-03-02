@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Calorie Analyzer</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { margin: auto; border-collapse: collapse; width: 50%; }
+        th, td { border: 1px solid black; padding: 10px; }
+    </style>
+</head>
+<body>
 
+    <h1>Food Calorie Analyzer</h1>
+    <label for="foodSelect">Select a Food:</label>
+    <select id="foodSelect"></select>
+    
+    <h2>Food Data</h2>
+    <table>
+        <tr><th>Food Name</th><td id="foodName"></td></tr>
+        <tr><th>Carbohydrates (g)</th><td id="carbs"></td></tr>
+        <tr><th>Protein (g)</th><td id="protein"></td></tr>
+        <tr><th>Fat (g)</th><td id="fat"></td></tr>
+        <tr><th>Water (g)</th><td id="water"></td></tr>
+        <tr><th>Total Calories (kcal)</th><td id="totalCalories"></td></tr>
+    </table>
+
+    <h2>Calorie Distribution</h2>
+    <canvas id="calorieChart" width="400" height="400"></canvas>
+
+    <script>
+        let foodData = [];
+        let foodSelect = document.getElementById('foodSelect');
+
+        // Load CSV file
+        fetch('food_data.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    dynamicTyping: true,
+                    complete: function (results) {
+                        foodData = results.data;
+                        populateDropdown();
+                    }
+                });
+            });
+
+        // Populate dropdown menu
+        function populateDropdown() {
+            foodData.forEach(food => {
+                let option = document.createElement('option');
+                option.value = food["Food Name"];
+                option.textContent = food["Food Name"];
+                foodSelect.appendChild(option);
+            });
+
+            // Automatically load first food item
+            if (foodData.length > 0) {
+                displayFoodData(foodData[0]);
+            }
+        }
+
+        // Event Listener for Dropdown Change
+        foodSelect.addEventListener('change', function () {
+            let selectedFood = foodData.find(food => food["Food Name"] === this.value);
+            if (selectedFood) displayFoodData(selectedFood);
+        });
+
+        // Display food data
+        function displayFoodData(food) {
+            document.getElementById('foodName').textContent = food["Food Name"];
+            document.getElementById('carbs').textContent = food["Carbs (g)"];
+            document.getElementById('protein').textContent = food["Protein (g)"];
+            document.getElementById('fat').textContent = food["Fat (g)"];
+            document.getElementById('water').textContent = food["Water (g)"];
+
+            let Hc = food["Carbs (g)"] * 4;
+            let Hp = food["Protein (g)"] * 3.9;
+            let Hf = food["Fat (g)"] * 8.9;
+            let totalCalories = Hc + Hp + Hf;
+
+            document.getElementById('totalCalories').textContent = totalCalories.toFixed(2);
+
+            updateChart(Hc, Hp, Hf);
+        }
+
+        // Chart.js Pie Chart
+        let calorieChart = new Chart(document.getElementById('calorieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Carbohydrates', 'Protein', 'Fat'],
+                datasets: [{
+                    data: [0, 0, 0], // Initial empty values
+                    backgroundColor: ['#ffcc00', '#ff6666', '#66ccff']
+                }]
+            }
+        });
+
+        // Update Chart
+        function updateChart(Hc, Hp, Hf) {
+            calorieChart.data.datasets[0].data = [Hc, Hp, Hf];
+            calorieChart.update();
+        }
+    </script>
+
+</body>
+</html>
