@@ -204,7 +204,13 @@
                         text: '熱量佔比 (%)',  // Chart Title
                         font: { size: 16 }
                     },
+                    legend: {
+                        labels: {
+                            font: { size: 14 }  // Adjust legend font size
+                        }
+                    },
                     tooltip: {
+                        bodyFont: { size: 14 },  // Adjust floating label (tooltip) font size
                         callbacks: {
                             label: (tooltipItem) => tooltipItem.raw + '%'
                         }
@@ -230,6 +236,14 @@
                         display: true,
                         text: '重量 (g)',  // Chart Title
                         font: { size: 16 }
+                    },
+                    legend: {
+                        labels: {
+                        font: { size: 14 }  // Adjust legend font size
+                        }
+                    },
+                    tooltip: {
+                        bodyFont: { size: 14 }  // Adjust floating label (tooltip) font size
                     }
                 }
             }
