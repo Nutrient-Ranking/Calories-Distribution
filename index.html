@@ -8,31 +8,68 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        table { margin: auto; border-collapse: collapse; width: 50%; }
-        th, td { border: 1px solid black; padding: 10px; }
+        table { margin: auto; border-collapse: collapse; width: 60%; }
+        th, td { border: 1px solid black; padding: 10px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        .dropdown-container { margin-bottom: 20px; }
+        .chart-container { display: flex; justify-content: center; gap: 30px; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <h1>Food Calorie Analyzer</h1>
-    <label for="foodSelect">Select a Food:</label>
-    <select id="foodSelect"></select>
-    
-    <h2>Food Data</h2>
+
     <table>
-        <tr><th>Food Name</th><td id="foodName"></td></tr>
-        <tr><th>Carbohydrates (g)</th><td id="carbs"></td></tr>
-        <tr><th>Protein (g)</th><td id="protein"></td></tr>
-        <tr><th>Fat (g)</th><td id="fat"></td></tr>
-        <tr><th>Water (g)</th><td id="water"></td></tr>
-        <tr><th>Total Calories (kcal)</th><td id="totalCalories"></td></tr>
+        <caption><strong>Mass and Calorie Distribution</strong></caption>
+        
+        <!-- Food Selection -->
+        <tr>
+            <th>Food Category</th>
+            <th>Food Name</th>
+        </tr>
+        <tr>
+            <td>
+                <select id="categorySelect"></select>
+            </td>
+            <td>
+                <select id="foodSelect"></select>
+            </td>
+        </tr>
+
+        <!-- Total Mass and Calorie Row -->
+        <tr>
+            <th>Total Mass (g)</th>
+            <th>Total Calories (kcal)</th>
+        </tr>
+        <tr>
+            <td>100</td>
+            <td id="totalCalories"></td>
+        </tr>
     </table>
 
-    <h2>Calorie Distribution</h2>
-    <canvas id="calorieChart" width="400" height="400"></canvas>
+    <!-- Nutrient Breakdown Table -->
+    <table>
+        <tr>
+            <th>Nutrient</th>
+            <th>Mass (g)</th>
+            <th>Calorie (%)</th>
+        </tr>
+        <tr><td>Carbohydrates</td><td id="carbs"></td><td id="carbCal"></td></tr>
+        <tr><td>Protein</td><td id="protein"></td><td id="proteinCal"></td></tr>
+        <tr><td>Fat</td><td id="fat"></td><td id="fatCal"></td></tr>
+        <tr><td>Water</td><td id="water"></td><td>-</td></tr>
+        <tr><td>Ash</td><td id="ash"></td><td>-</td></tr>
+    </table>
+
+    <!-- Charts Row -->
+    <div class="chart-container">
+        <canvas id="massChart" width="300" height="300"></canvas>
+        <canvas id="calorieChart" width="300" height="300"></canvas>
+    </div>
 
     <script>
         let foodData = [];
+        let categorySelect = document.getElementById('categorySelect');
         let foodSelect = document.getElementById('foodSelect');
 
         // Load CSV file
@@ -45,27 +82,49 @@
                     dynamicTyping: true,
                     complete: function (results) {
                         foodData = results.data;
-                        populateDropdown();
+                        populateCategories();
                     }
                 });
             });
 
-        // Populate dropdown menu
-        function populateDropdown() {
-            foodData.forEach(food => {
+        // Populate category dropdown
+        function populateCategories() {
+            let categories = [...new Set(foodData.map(food => food.Category))]; // Unique categories
+            categories.forEach(category => {
+                let option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+
+            // Load the first category's food items
+            populateFoods(categories[0]);
+        }
+
+        // Populate food dropdown based on selected category
+        function populateFoods(selectedCategory) {
+            foodSelect.innerHTML = ""; // Clear previous options
+            let filteredFoods = foodData.filter(food => food.Category === selectedCategory);
+
+            filteredFoods.forEach(food => {
                 let option = document.createElement('option');
                 option.value = food["Food Name"];
                 option.textContent = food["Food Name"];
                 foodSelect.appendChild(option);
             });
 
-            // Automatically load first food item
-            if (foodData.length > 0) {
-                displayFoodData(foodData[0]);
+            // Automatically load the first food item
+            if (filteredFoods.length > 0) {
+                displayFoodData(filteredFoods[0]);
             }
         }
 
-        // Event Listener for Dropdown Change
+        // Update food list when category changes
+        categorySelect.addEventListener('change', function () {
+            populateFoods(this.value);
+        });
+
+        // Update food data when a new food is selected
         foodSelect.addEventListener('change', function () {
             let selectedFood = foodData.find(food => food["Food Name"] === this.value);
             if (selectedFood) displayFoodData(selectedFood);
@@ -73,11 +132,11 @@
 
         // Display food data
         function displayFoodData(food) {
-            document.getElementById('foodName').textContent = food["Food Name"];
             document.getElementById('carbs').textContent = food["Carbs (g)"];
             document.getElementById('protein').textContent = food["Protein (g)"];
             document.getElementById('fat').textContent = food["Fat (g)"];
             document.getElementById('water').textContent = food["Water (g)"];
+            document.getElementById('ash').textContent = food["Ash (g)"];
 
             let Hc = food["Carbs (g)"] * 4;
             let Hp = food["Protein (g)"] * 3.9;
@@ -85,24 +144,29 @@
             let totalCalories = Hc + Hp + Hf;
 
             document.getElementById('totalCalories').textContent = totalCalories.toFixed(2);
+            document.getElementById('carbCal').textContent = ((Hc / totalCalories) * 100).toFixed(1) + '%';
+            document.getElementById('proteinCal').textContent = ((Hp / totalCalories) * 100).toFixed(1) + '%';
+            document.getElementById('fatCal').textContent = ((Hf / totalCalories) * 100).toFixed(1) + '%';
 
-            updateChart(Hc, Hp, Hf);
+            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf);
         }
 
-        // Chart.js Pie Chart
-        let calorieChart = new Chart(document.getElementById('calorieChart'), {
+        // Initialize Charts
+        let massChart = new Chart(document.getElementById('massChart'), {
             type: 'pie',
-            data: {
-                labels: ['Carbohydrates', 'Protein', 'Fat'],
-                datasets: [{
-                    data: [0, 0, 0], // Initial empty values
-                    backgroundColor: ['#ffcc00', '#ff6666', '#66ccff']
-                }]
-            }
+            data: { labels: ['Carbohydrates', 'Protein', 'Fat', 'Water', 'Ash'], datasets: [{ data: [], backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc'] }] }
         });
 
-        // Update Chart
-        function updateChart(Hc, Hp, Hf) {
+        let calorieChart = new Chart(document.getElementById('calorieChart'), {
+            type: 'pie',
+            data: { labels: ['Carbohydrates', 'Protein', 'Fat'], datasets: [{ data: [], backgroundColor: ['#ffcc00', '#ff6666', '#66ccff'] }] }
+        });
+
+        // Update Charts
+        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf) {
+            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
+            massChart.update();
+
             calorieChart.data.datasets[0].data = [Hc, Hp, Hf];
             calorieChart.update();
         }
