@@ -183,7 +183,28 @@
             calorieChart.update();
         }
         
-        let massChart = new Chart(document.getElementById('massChart'), { type: 'pie', data: { labels: ['Carbs', 'Protein', 'Fat', 'Water', 'Ash'], datasets: [{ data: [], backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc'] }] } });
+        // Mass Distribution Chart
+        let massChart = new Chart(document.getElementById('massChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Carbohydrates', 'Protein', 'Fat', 'Water', 'Ash'],
+                datasets: [{
+                    data: [0, 0, 0, 0, 0], // Start with empty values
+                    backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc']
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Mass',  // Chart Title
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
+        // Calorie Distribution Chart
         let calorieChart = new Chart(document.getElementById('calorieChart'), {
             type: 'pie',
             data: {
@@ -195,6 +216,11 @@
             },
             options: {
                 plugins: {
+                    title: {
+                        display: true,
+                        text: 'Calorie',  // Chart Title
+                        font: { size: 16 }
+                    },
                     tooltip: {
                         callbacks: {
                             label: (tooltipItem) => tooltipItem.raw + '%'
@@ -203,7 +229,7 @@
                 }
             }
         });
-
+        
     </script>
 
 </body>
