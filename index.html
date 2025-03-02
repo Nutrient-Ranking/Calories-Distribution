@@ -163,8 +163,9 @@
             document.getElementById('proteinCal').textContent = ((Hp / totalCalories) * 100).toFixed(1) + '%';
             document.getElementById('fatCal').textContent = ((Hf / totalCalories) * 100).toFixed(1) + '%';
 
-            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf);
+            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, totalCalories);
         }
+
 
         // Update Charts
         function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
@@ -183,7 +184,25 @@
         }
         
         let massChart = new Chart(document.getElementById('massChart'), { type: 'pie', data: { labels: ['Carbs', 'Protein', 'Fat', 'Water', 'Ash'], datasets: [{ data: [], backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc'] }] } });
-        let calorieChart = new Chart(document.getElementById('calorieChart'), { type: 'pie', options: { plugins: { tooltip: { callbacks: { label: (tooltipItem) => tooltipItem.raw.toFixed(1) + "%" } } } } });
+        let calorieChart = new Chart(document.getElementById('calorieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Carbohydrates', 'Protein', 'Fat'],
+                datasets: [{
+                    data: [0, 0, 0], // Start with empty values
+                    backgroundColor: ['#ffcc00', '#ff6666', '#66ccff']
+                }]
+            },
+            options: {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: (tooltipItem) => tooltipItem.raw + '%'
+                        }
+                    }
+                }
+            }
+        });
 
     </script>
 
