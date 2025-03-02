@@ -151,31 +151,32 @@
             document.getElementById('fat').textContent = food["Fat (g)"];
             document.getElementById('water').textContent = food["Water (g)"];
             document.getElementById('ash').textContent = food["Ash (g)"];
-            document.getElementById('totalCalories').textContent = food["Calorie (kcal)"].toFixed(2);
+            document.getElementById('totalCalories').textContent = food["Calorie (kcal)"].toFixed(1);
 
             let totalCalories = food["Calorie (kcal)"];
             let Hc = food["Carbs (g)"] * 4;
             let Hp = food["Protein (g)"] * 3.9;
             let Hf = food["Fat (g)"] * 8.9;
+            let CalculatedCalories = Hc + Hp + Hf;
 
-            document.getElementById('carbCal').textContent = ((Hc / totalCalories) * 100).toFixed(1) + '%';
-            document.getElementById('proteinCal').textContent = ((Hp / totalCalories) * 100).toFixed(1) + '%';
-            document.getElementById('fatCal').textContent = ((Hf / totalCalories) * 100).toFixed(1) + '%';
+            document.getElementById('carbCal').textContent = ((Hc / CalculatedCalories) * 100).toFixed(1) + '%';
+            document.getElementById('proteinCal').textContent = ((Hp / CalculatedCalories) * 100).toFixed(1) + '%';
+            document.getElementById('fatCal').textContent = ((Hf / CalculatedCalories) * 100).toFixed(1) + '%';
 
-            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, totalCalories);
+            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, CalculatedCalories);
         }
 
 
         // Update Charts
-        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
+        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, CalculatedCalories) {
             // Update Mass Distribution Chart
             massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
             massChart.update();
 
             // Calculate Calorie Percentages
-            let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
-            let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
-            let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
+            let carbPercent = ((Hc / CalculatedCalories) * 100).toFixed(1);
+            let proteinPercent = ((Hp / CalculatedCalories) * 100).toFixed(1);
+            let fatPercent = ((Hf / CalculatedCalories) * 100).toFixed(1);
 
             // Update Calorie Distribution Chart
             calorieChart.data.datasets[0].data = [carbPercent, proteinPercent, fatPercent];
