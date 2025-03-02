@@ -39,8 +39,8 @@
         
         <!-- Food Selection -->
         <tr>
-            <th>Food Category</th>
-            <th>Food Name</th>
+            <th>分類</th>
+            <th>名稱</th>
         </tr>
         <tr>
             <td>
@@ -53,8 +53,8 @@
 
         <!-- Total Mass and Calorie Row -->
         <tr>
-            <th>Total Mass (g)</th>
-            <th>Total Calories (kcal)</th>
+            <th>總重量 (g)</th>
+            <th>總熱量 (kcal)</th>
         </tr>
         <tr>
             <td>100</td>
@@ -65,15 +65,15 @@
     <!-- Nutrient Breakdown Table -->
     <table>
         <tr>
-            <th>Nutrient</th>
-            <th>Mass (g)</th>
-            <th>Calorie (%)</th>
+            <th>成分</th>
+            <th>重量 (g)</th>
+            <th>熱量佔比 (%)</th>
         </tr>
-        <tr><td>Carbohydrates</td><td id="carbs"></td><td id="carbCal"></td></tr>
-        <tr><td>Protein</td><td id="protein"></td><td id="proteinCal"></td></tr>
-        <tr><td>Fat</td><td id="fat"></td><td id="fatCal"></td></tr>
-        <tr><td>Water</td><td id="water"></td><td>-</td></tr>
-        <tr><td>Ash</td><td id="ash"></td><td>-</td></tr>
+        <tr><td>醣類</td><td id="carbs"></td><td id="carbCal"></td></tr>
+        <tr><td>蛋白質</td><td id="protein"></td><td id="proteinCal"></td></tr>
+        <tr><td>脂肪</td><td id="fat"></td><td id="fatCal"></td></tr>
+        <tr><td>水</td><td id="water"></td><td>-</td></tr>
+        <tr><td>灰分</td><td id="ash"></td><td>-</td></tr>
     </table>
 
     <!-- Charts Row -->
@@ -187,7 +187,7 @@
         let massChart = new Chart(document.getElementById('massChart'), {
             type: 'pie',
             data: {
-                labels: ['Carbohydrates', 'Protein', 'Fat', 'Water', 'Ash'],
+                labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
                 datasets: [{
                     data: [0, 0, 0, 0, 0], // Start with empty values
                     //backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc']
@@ -209,7 +209,7 @@
         let calorieChart = new Chart(document.getElementById('calorieChart'), {
             type: 'pie',
             data: {
-                labels: ['Carbohydrates', 'Protein', 'Fat'],
+                labels: ['醣類', '蛋白質', '脂肪'],
                 datasets: [{
                     data: [0, 0, 0], // Start with empty values
                     //backgroundColor: ['#ffcc00', '#ff6666', '#66ccff']
