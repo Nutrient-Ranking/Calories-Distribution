@@ -142,11 +142,11 @@
 
         // Display food data
         function displayFoodData(food) {
-            document.getElementById('carbs').textContent = food["Carbs (g)"];
-            document.getElementById('protein').textContent = food["Protein (g)"];
-            document.getElementById('fat').textContent = food["Fat (g)"];
-            document.getElementById('water').textContent = food["Water (g)"];
-            document.getElementById('ash').textContent = food["Ash (g)"];
+            document.getElementById('carbs').textContent = food["Carbs (g)"].toFixed(2);
+            document.getElementById('protein').textContent = food["Protein (g)"].toFixed(2);
+            document.getElementById('fat').textContent = food["Fat (g)"].toFixed(2);
+            document.getElementById('water').textContent = food["Water (g)"].toFixed(2);
+            document.getElementById('ash').textContent = food["Ash (g)"].toFixed(2);
             document.getElementById('totalCalories').textContent = food["Calorie (kcal)"].toFixed(1);
 
             let totalCalories = food["Calorie (kcal)"];
@@ -176,11 +176,11 @@
             calorieChart.update();
 
             // Fixed-point Mass data 
-            let mcF = (mc * 1.0).toFixed(1);
-            let mpF = (mp * 1.0).toFixed(1);
-            let mfF = (mf * 1.0).toFixed(1);
-            let mwF = (mw * 1.0).toFixed(1);
-            let maF = (ma * 1.0).toFixed(1);
+            let mcF = (mc * 1.0).toFixed(2);
+            let mpF = (mp * 1.0).toFixed(2);
+            let mfF = (mf * 1.0).toFixed(2);
+            let mwF = (mw * 1.0).toFixed(2);
+            let maF = (ma * 1.0).toFixed(2);
             // Update Mass Distribution Chart
             massChart.data.datasets[0].data = [mcF, mpF, mfF, mwF, maF];
             massChart.update();
