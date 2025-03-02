@@ -167,14 +167,21 @@
         }
 
         // Update Charts
-        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf) {
+        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
+            // Update Mass Distribution Chart
             massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
             massChart.update();
 
-            calorieChart.data.datasets[0].data = [(Hc / (Hc + Hp + Hf)) * 100, (Hp / (Hc + Hp + Hf)) * 100, (Hf / (Hc + Hp + Hf)) * 100];
+            // Calculate Calorie Percentages
+            let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
+            let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
+            let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
+
+            // Update Calorie Distribution Chart
+            calorieChart.data.datasets[0].data = [carbPercent, proteinPercent, fatPercent];
             calorieChart.update();
         }
-
+        
         let massChart = new Chart(document.getElementById('massChart'), { type: 'pie', data: { labels: ['Carbs', 'Protein', 'Fat', 'Water', 'Ash'], datasets: [{ data: [], backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc'] }] } });
         let calorieChart = new Chart(document.getElementById('calorieChart'), { type: 'pie', options: { plugins: { tooltip: { callbacks: { label: (tooltipItem) => tooltipItem.raw.toFixed(1) + "%" } } } } });
 
