@@ -48,12 +48,12 @@
 
         <!-- Total Mass and Calorie Row -->
         <tr>
-            <th>總重量 (g)</th>
             <th>總熱量 (kcal)</th>
+            <th>總重量 (g)</th>
         </tr>
         <tr>
-            <td>100</td>
             <td id="totalCalories"></td>
+            <td>100</td>
         </tr>
     </table>
 
@@ -176,6 +176,7 @@
             calorieChart.update();
 
             // Fixed-point Mass data 
+            let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
             let mcF = (mc * 1.0).toFixed(2);
             let mpF = (mp * 1.0).toFixed(2);
             let mfF = (mf * 1.0).toFixed(2);
