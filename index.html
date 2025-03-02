@@ -165,9 +165,6 @@
 
         // Update Charts
         function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, CalculatedCalories) {
-            // Update Mass Distribution Chart
-            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
-            massChart.update();
 
             // Calculate Calorie Percentages
             let carbPercent = ((Hc / CalculatedCalories) * 100).toFixed(1);
@@ -177,30 +174,18 @@
             // Update Calorie Distribution Chart
             calorieChart.data.datasets[0].data = [carbPercent, proteinPercent, fatPercent];
             calorieChart.update();
+
+            // Fixed-point Mass data 
+            let mcF = (mc * 1.0).toFixed(1);
+            let mpF = (mp * 1.0).toFixed(1);
+            let mfF = (mf * 1.0).toFixed(1);
+            let mwF = (mw * 1.0).toFixed(1);
+            let maF = (ma * 1.0).toFixed(1);
+            // Update Mass Distribution Chart
+            massChart.data.datasets[0].data = [mcF, mpF, mfF, mwF, maF];
+            massChart.update();
         }
         
-        // Mass Distribution Chart
-        let massChart = new Chart(document.getElementById('massChart'), {
-            type: 'pie',
-            data: {
-                labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
-                datasets: [{
-                    data: [0, 0, 0, 0, 0], // Start with empty values
-                    //backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc']
-                    backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: '重量 (g)',  // Chart Title
-                        font: { size: 16 }
-                    }
-                }
-            }
-        });
-
         // Calorie Distribution Chart
         let calorieChart = new Chart(document.getElementById('calorieChart'), {
             type: 'pie',
@@ -228,6 +213,28 @@
             }
         });
         
+        // Mass Distribution Chart
+        let massChart = new Chart(document.getElementById('massChart'), {
+            type: 'pie',
+            data: {
+                labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
+                datasets: [{
+                    data: [0, 0, 0, 0, 0], // Start with empty values
+                    //backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc']
+                    backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '重量 (g)',  // Chart Title
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
     </script>
 
 </body>
