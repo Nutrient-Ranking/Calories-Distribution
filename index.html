@@ -96,6 +96,7 @@
                     header: true,
                     skipEmptyLines: true,
                     dynamicTyping: true,
+                    quoteChar: '"',  // Ensures values with commas stay in one cell
                     complete: function (results) {
                         foodData = results.data;
                         populateCategories();
