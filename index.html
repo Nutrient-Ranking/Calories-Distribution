@@ -11,7 +11,13 @@
         table { margin: auto; border-collapse: collapse; width: 60%; }
         th, td { border: 1px solid black; padding: 10px; text-align: center; }
         th { background-color: #f2f2f2; }
-        .dropdown-container { margin-bottom: 20px; }
+        .dropdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Adjust spacing between dropdowns */
+            margin-bottom: 20px;
+        }
+
 
          /* 🔹 Increase Font Size for Dropdowns */
         select {
@@ -39,29 +45,11 @@
 <body>
 
     <h1 style="font-size: 24px;">食品熱量分析</h1>
-
-    <table>
-        
-        <!-- Food Selection -->
-        <tr>
-            <td>
-                <select id="categorySelect"></select>
-            </td>
-            <td>
-                <select id="foodSelect"></select>
-            </td>
-        </tr>
-
-        <!-- Total Mass and Calorie Row -->
-        <tr>
-            <th>總熱量 (kcal)</th>
-            <th>總重量 (g)</th>
-        </tr>
-        <tr>
-            <td id="totalCalories"></td>
-            <td>100</td>
-        </tr>
-    </table>
+    
+    <div class="dropdown-container">
+        <select id="categorySelect"></select>
+        <select id="foodSelect"></select>
+    </div>
 
     <!-- Charts Row -->
     <div class="chart-container">
@@ -171,91 +159,84 @@
 
 
         // Update Charts
-        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, CalculatedCalories) {
-
-            // Calculate Calorie Percentages
-            let carbPercent = ((Hc / CalculatedCalories) * 100).toFixed(1);
-            let proteinPercent = ((Hp / CalculatedCalories) * 100).toFixed(1);
-            let fatPercent = ((Hf / CalculatedCalories) * 100).toFixed(1);
+        function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
+            // Calculate percentages
+            let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
+            let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
+            let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
 
             // Update Calorie Distribution Chart
             calorieChart.data.datasets[0].data = [carbPercent, proteinPercent, fatPercent];
+            calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
             calorieChart.update();
 
-            // Fixed-point Mass data 
-            let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
-            let mcF = (mc * 1.0).toFixed(2);
-            let mpF = (mp * 1.0).toFixed(2);
-            let mfF = (mf * 1.0).toFixed(2);
-            let mwF = (mw * 1.0).toFixed(2);
-            let maF = (ma * 1.0).toFixed(2);
             // Update Mass Distribution Chart
-            massChart.data.datasets[0].data = [mcF, mpF, mfF, mwF, maF];
+            let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
+            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
+            massChart.options.plugins.title.text = `重量 ${totalMass} g`;
             massChart.update();
         }
+
         
         // Calorie Distribution Chart
         let calorieChart = new Chart(document.getElementById('calorieChart'), {
-            type: 'pie',
-            data: {
-                labels: ['醣類', '蛋白質', '脂肪'],
-                datasets: [{
-                    data: [0, 0, 0], // Start with empty values
-                    //backgroundColor: ['#ffcc00', '#ff6666', '#66ccff']
-                    backgroundColor: ['#99ff99', '#ff6666', '#ffcc00']
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: '熱量佔比 (%)',  // Chart Title
-                        font: { size: 16 }
-                    },
-                    legend: {
-                        labels: {
-                            font: { size: 14 }  // Adjust legend font size
-                        }
-                    },
-                    tooltip: {
-                        bodyFont: { size: 14 },  // Adjust floating label (tooltip) font size
-                        callbacks: {
-                            label: (tooltipItem) => tooltipItem.raw + '%'
-                        }
-                    }
-                }
-            }
-        });
+           type: 'pie',
+           data: {
+               labels: ['醣類', '蛋白質', '脂肪'],
+               datasets: [{
+                   data: [0, 0, 0], 
+                   backgroundColor: ['#99ff99', '#ff6666', '#ffcc00']
+               }]
+           },
+           options: {
+               plugins: {
+                   title: {
+                       display: true,
+                       text: '熱量 0 kcal',  // Placeholder title
+                       font: { size: 16 }
+                   },
+                   legend: {
+                       labels: { font: { size: 14 } }
+                   },
+                   tooltip: {
+                       bodyFont: { size: 14 },
+                       callbacks: {
+                           label: (tooltipItem) => tooltipItem.raw + '%'
+                       }
+                   }
+               }
+           }
+       });
+
+
+
         
         // Mass Distribution Chart
         let massChart = new Chart(document.getElementById('massChart'), {
-            type: 'pie',
-            data: {
-                labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
-                datasets: [{
-                    data: [0, 0, 0, 0, 0], // Start with empty values
-                    //backgroundColor: ['#ffcc00', '#ff6666', '#66ccff', '#99ff99', '#cccccc']
-                    backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: '重量 (g)',  // Chart Title
-                        font: { size: 16 }
-                    },
-                    legend: {
-                        labels: {
-                        font: { size: 14 }  // Adjust legend font size
-                        }
-                    },
-                    tooltip: {
-                        bodyFont: { size: 14 }  // Adjust floating label (tooltip) font size
-                    }
-                }
-            }
-        });
+           type: 'pie',
+           data: {
+               labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
+               datasets: [{
+                   data: [0, 0, 0, 0, 0], 
+                   backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
+               }]
+           },
+           options: {
+               plugins: {
+                   title: {
+                       display: true,
+                       text: '重量 100 g',  // Placeholder title
+                       font: { size: 16 }
+                   },
+                   legend: {
+                       labels: { font: { size: 14 } }
+                   },
+                  tooltip: {
+                       bodyFont: { size: 14 }
+                   }
+               }
+           }
+       });
 
     </script>
 
