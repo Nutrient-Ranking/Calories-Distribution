@@ -160,22 +160,41 @@
 
         // Update Charts
         function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
-            // Calculate percentages
+            // Ensure numeric values (avoid passing formatted strings)
+            mc = parseFloat(mc);
+            mp = parseFloat(mp);
+            mf = parseFloat(mf);
+            mw = parseFloat(mw);
+            ma = parseFloat(ma);
+
+            Hc = parseFloat(Hc);
+            Hp = parseFloat(Hp);
+            Hf = parseFloat(Hf);
+            totalCalories = parseFloat(totalCalories);
+
+            // Calculate Calorie Percentages
             let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
             let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
             let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
 
-            // Update Calorie Distribution Chart
-            calorieChart.data.datasets[0].data = [carbPercent, proteinPercent, fatPercent];
-            calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
-            calorieChart.update();
+            // Update Calorie Chart Data (Ensure values are numbers)
+            calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
 
-            // Update Mass Distribution Chart
+            // Update Calorie Chart Title
+            calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
+            calorieChart.update();  // Ensure the chart refreshes
+
+            // Calculate Total Mass
             let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
+
+            // Update Mass Chart Data (Ensure values are numbers)
             massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
+
+            // Update Mass Chart Title
             massChart.options.plugins.title.text = `重量 ${totalMass} g`;
-            massChart.update();
+            massChart.update();  // Ensure the chart refreshes
         }
+
 
         
         // Calorie Distribution Chart
