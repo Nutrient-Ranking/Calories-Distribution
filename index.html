@@ -75,6 +75,9 @@
         let foodData = [];
         let categorySelect = document.getElementById('categorySelect');
         let foodSelect = document.getElementById('foodSelect');
+        let calorieChart = null;
+        let massChart = null;
+        
 
         // Load CSV file
         fetch('food_data.csv')
@@ -160,103 +163,96 @@
 
         // Update Charts
         function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
-            // Ensure numeric values (avoid passing formatted strings)
-            mc = parseFloat(mc);
-            mp = parseFloat(mp);
-            mf = parseFloat(mf);
-            mw = parseFloat(mw);
-            ma = parseFloat(ma);
+           // Ensure numeric values (avoid passing formatted strings)
+           mc = parseFloat(mc);
+           mp = parseFloat(mp);
+           mf = parseFloat(mf);
+           mw = parseFloat(mw);
+           ma = parseFloat(ma);
 
-            Hc = parseFloat(Hc);
-            Hp = parseFloat(Hp);
-            Hf = parseFloat(Hf);
-            totalCalories = parseFloat(totalCalories);
+           Hc = parseFloat(Hc);
+           Hp = parseFloat(Hp);
+           Hf = parseFloat(Hf);
+           totalCalories = parseFloat(totalCalories);
 
-            // Calculate Calorie Percentages
-            let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
-            let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
-            let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
+           // 🛠 FIX: Convert percentages to numbers (remove % sign before parsing)
+           let carbPercent = (Hc / totalCalories) * 100;
+           let proteinPercent = (Hp / totalCalories) * 100;
+           let fatPercent = (Hf / totalCalories) * 100;
 
-            // Update Calorie Chart Data (Ensure values are numbers)
-            calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
+           // ✅ Ensure numbers are used in Chart.js
+           calorieChart.data.datasets[0].data = [carbPercent, proteinPercent, fatPercent];
+           calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
+           calorieChart.update();  // Refresh chart
 
-            // Update Calorie Chart Title
-            calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
-            calorieChart.update();  // Ensure the chart refreshes
+          // ✅ Fix Total Mass Calculation
+           let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
+           massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
+           massChart.options.plugins.title.text = `重量 ${totalMass} g`;
+           massChart.update();  // Refresh chart
+       }
 
-            // Calculate Total Mass
-            let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
+        function initializeCharts() {
+            calorieChart = new Chart(document.getElementById('calorieChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['醣類', '蛋白質', '脂肪'],
+                    datasets: [{
+                        data: [0, 0, 0], 
+                        backgroundColor: ['#99ff99', '#ff6666', '#ffcc00']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '熱量 0 kcal',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            labels: { font: { size: 14 } }
+                        },
+                        tooltip: {
+                            bodyFont: { size: 14 },
+                            callbacks: {
+                                label: (tooltipItem) => tooltipItem.raw.toFixed(1) + '%'
+                            }
+                        }
+                    }
+                }
+            });
 
-            // Update Mass Chart Data (Ensure values are numbers)
-            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
-
-            // Update Mass Chart Title
-            massChart.options.plugins.title.text = `重量 ${totalMass} g`;
-            massChart.update();  // Ensure the chart refreshes
+            massChart = new Chart(document.getElementById('massChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
+                    datasets: [{
+                        data: [0, 0, 0, 0, 0], 
+                        backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '重量 100 g',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            labels: { font: { size: 14 } }
+                        },
+                        tooltip: {
+                            bodyFont: { size: 14 }
+                        }
+                    }
+                }
+            });
         }
 
-
-        
-        // Calorie Distribution Chart
-        let calorieChart = new Chart(document.getElementById('calorieChart'), {
-           type: 'pie',
-           data: {
-               labels: ['醣類', '蛋白質', '脂肪'],
-               datasets: [{
-                   data: [0, 0, 0], 
-                   backgroundColor: ['#99ff99', '#ff6666', '#ffcc00']
-               }]
-           },
-           options: {
-               plugins: {
-                   title: {
-                       display: true,
-                       text: '熱量 0 kcal',  // Placeholder title
-                       font: { size: 16 }
-                   },
-                   legend: {
-                       labels: { font: { size: 14 } }
-                   },
-                   tooltip: {
-                       bodyFont: { size: 14 },
-                       callbacks: {
-                           label: (tooltipItem) => tooltipItem.raw + '%'
-                       }
-                   }
-               }
-           }
+       document.addEventListener("DOMContentLoaded", function() {
+           initializeCharts();  // Ensure charts exist before updates
        });
-
-
-
-        
-        // Mass Distribution Chart
-        let massChart = new Chart(document.getElementById('massChart'), {
-           type: 'pie',
-           data: {
-               labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
-               datasets: [{
-                   data: [0, 0, 0, 0, 0], 
-                   backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
-               }]
-           },
-           options: {
-               plugins: {
-                   title: {
-                       display: true,
-                       text: '重量 100 g',  // Placeholder title
-                       font: { size: 16 }
-                   },
-                   legend: {
-                       labels: { font: { size: 14 } }
-                   },
-                  tooltip: {
-                       bodyFont: { size: 14 }
-                   }
-               }
-           }
-       });
-
+ 
     </script>
 
 </body>
