@@ -217,7 +217,7 @@
             calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
             calorieChart.update();  // Refresh chart
 
-            let totalMass = (mc + mp + mf + mw + ma).toFixed(2);
+            let totalMass = (mc + mp + mf + mw + ma).toFixed(1);
             massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
             massChart.options.plugins.title.text = `重量 ${totalMass} g`;
             massChart.update();  // Refresh chart
