@@ -235,17 +235,19 @@
                     }]
                 },
                 options: {
+                    responsive: true,   // ✅ Keep chart responsive
+                    maintainAspectRatio: false,  // ✅ Prevent forced resizing
                     plugins: {
                         title: {
                             display: true,
                             text: '熱量 0 kcal',
-                            font: { size: 16 }
+                            font: { size: 18 }    
                         },
                         legend: {
-                            labels: { font: { size: 14 } }
+                            labels: { font: { size: 16 } }   // ✅ Fixed legend font size
                         },
                         tooltip: {
-                            bodyFont: { size: 14 },
+                            bodyFont: { size: 16 },  // ✅ Fixed tooltip font size
                             callbacks: {
                                 label: (tooltipItem) => tooltipItem.raw.toFixed(1) + '%'
                             }
@@ -264,17 +266,19 @@
                     }]
                 },
                 options: {
+                    responsive: true,  // ✅ Keep chart responsive
+                    maintainAspectRatio: false,  // ✅ Prevent forced resizing
                     plugins: {
                         title: {
                             display: true,
                             text: '重量 100 g',
-                            font: { size: 16 }
+                            font: { size: 18 }  // ✅ Fixed title font size
                         },
                         legend: {
-                            labels: { font: { size: 14 } }
+                            labels: { font: { size: 16 } }   // ✅ Fixed legend font size
                         },
                         tooltip: {
-                            bodyFont: { size: 14 }
+                            bodyFont: { size: 16 }   // ✅ Fixed tooltip font size
                         }
                     }
                 }
