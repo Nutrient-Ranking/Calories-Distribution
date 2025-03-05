@@ -161,11 +161,11 @@
         function displayFoodData(food) {
            if (!food) return;
 
-           document.getElementById('carbs').textContent = food["Carbs (g)"].toFixed(3);
-           document.getElementById('protein').textContent = food["Protein (g)"].toFixed(3);
-           document.getElementById('fat').textContent = food["Fat (g)"].toFixed(3);
-           document.getElementById('water').textContent = food["Water (g)"].toFixed(3);
-           document.getElementById('ash').textContent = food["Ash (g)"].toFixed(3);
+           document.getElementById('carbs').textContent = food["Carbs (g)"].toFixed(2);
+           document.getElementById('protein').textContent = food["Protein (g)"].toFixed(2);
+           document.getElementById('fat').textContent = food["Fat (g)"].toFixed(2);
+           document.getElementById('water').textContent = food["Water (g)"].toFixed(2);
+           document.getElementById('ash').textContent = food["Ash (g)"].toFixed(2);
 
            let totalCalories = parseFloat(food["Calorie (kcal)"]);
            let Hc = parseFloat(food["Carbs (g)"]) * 4;
