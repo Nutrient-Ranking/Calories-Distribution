@@ -16,8 +16,8 @@
             background-color: #ffeb3b;  /* ✅ Yellow background */
             color: #333;  /* ✅ Dark text for readability */
             text-align: center;
-            padding: 8px 15px;
-            font-size: 18px;
+            padding: 4px 10px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -28,8 +28,8 @@
         /* ✅ Ensure readability on small screens */
         @media (max-width: 600px) {
             #messageBox {
-                font-size: 16px;  /* ✅ Slightly smaller text for mobile */
-                padding: 6px 10px;
+                font-size: 14px;  /* ✅ Slightly smaller text for mobile */
+                padding: 3px 5px;
             }
         }
 
@@ -114,13 +114,13 @@
 </head>
 <body>
 
-    <h1 style="font-size: 24px;">食品熱量分析</h1>
-    
-    <!-- Scrollable Message Box Below Title -->
+    <!-- Scrollable Message Box -->
     <div id="messageBox" onclick="openMessageLink()">
         <p id="messageLine1"></p>
         <p id="messageLine2"></p>
     </div>
+    
+    <h1 style="font-size: 24px;">食品熱量分析</h1>
     
     <div class="dropdown-container">
         <select id="categorySelect"></select>
