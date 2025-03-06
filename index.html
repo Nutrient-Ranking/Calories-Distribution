@@ -200,25 +200,10 @@
             }
         }
 
-        // Load CSV file
-        fetch('food_data.csv')
-            .then(response => response.text())
-            .then(csvText => {
-                let utf8Text = new TextDecoder('utf-8').decode(new TextEncoder().encode(csvText));
-                Papa.parse(utf8Text, {
-                    header: true,
-                    skipEmptyLines: true,
-                    dynamicTyping: true,
-                    quoteChar: '"',
-                    complete: function (results) {
-                        foodData = results.data;
-                        populateCategories();
-                    }
-                });
-            });
-
         // Populate category dropdown
         function populateCategories() {
+            categorySelect.innerHTML = "";  // ✅ Clear previous categories to prevent duplicates
+
             let categories = [...new Set(foodData.map(food => food.Category))]; // Unique categories
             categories.forEach(category => {
                 let option = document.createElement('option');
@@ -228,7 +213,9 @@
             });
 
             // Load the first category's food items
-            populateFoods(categories[0]);
+             if (categories.length > 0) {
+                 populateFoods(categories[0]);
+             }
         }
 
         // Populate food dropdown based on selected category
