@@ -8,8 +8,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        table { margin: auto; border-collapse: collapse; width: 60%; }
-        th, td { border: 1px solid black; padding: 10px; text-align: center; }
+        /* ✅ Set a maximum width for the table */
+        table {
+            max-width: 600px;  /* ✅ Limits the width of the table */
+            width: 90%;  /* ✅ Makes the table responsive, adjusting to screen size */
+            margin: auto;  /* ✅ Centers the table on the page */
+            border-collapse: collapse;
+        }
+        /* ✅ Ensure table columns have proper spacing */
+       th, td {
+           padding: 8px;
+           text-align: center;
+           border: 1px solid black;
+       }
         th { background-color: #f2f2f2; }
         .dropdown-container {
            display: flex;
@@ -22,6 +33,13 @@
            margin-right: auto;
        }
 
+       /* ✅ Ensure readability on mobile */
+       @media (max-width: 600px) {
+           table {
+               width: 100%;  /* ✅ Table takes full width on smaller screens */
+           }
+       }
+        
        /* ✅ Ensure dropdowns take full width on small screens */
        @media (max-width: 600px) {  /* Applies only on screens smaller than 600px */
            .dropdown-container {
