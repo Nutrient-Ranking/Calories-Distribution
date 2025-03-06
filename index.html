@@ -15,12 +15,17 @@
             margin: auto;  /* ✅ Centers the table on the page */
             border-collapse: collapse;
         }
-        /* ✅ Ensure table columns have proper spacing */
-       th, td {
-           padding: 8px;
-           text-align: center;
-           border: 1px solid black;
-       }
+        /* ✅ Ensure font size matches the chart title (20px) */
+        th {
+            font-size: 20px;  /* ✅ Match chart title size */
+            font-weight: bold;
+        }
+        td {
+            font-size: 20px;  /* ✅ Match values with chart font */
+            text-align: center;
+            padding: 8px;    /* ✅ Ensure table columns have proper spacing */
+            border: 1px solid black;
+        }
         th { background-color: #f2f2f2; }
         .dropdown-container {
            display: flex;
@@ -37,6 +42,9 @@
        @media (max-width: 600px) {
            table {
                width: 100%;  /* ✅ Table takes full width on smaller screens */
+           }
+           th, td {
+               font-size: 18px;  /* ✅ Slightly smaller for small screens */
            }
        }
         
