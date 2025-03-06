@@ -9,35 +9,30 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         
-        /* ✅ Fixed message box at the top */
+        /* ✅ Message Box - Now Scrolls with Page */
         #messageBox {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #ffeb3b;  /* Yellow background */
-            color: #333;  /* Dark text */
+            width: 90%;  /* ✅ Prevents full-width stretching */
+            max-width: 600px;  /* ✅ Limits width to prevent too much spacing */
+            background-color: #ffeb3b;  /* ✅ Yellow background */
+            color: #333;  /* ✅ Dark text for readability */
             text-align: center;
-            padding: 10px 20px;
+            padding: 8px 15px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-            z-index: 1000;  /* Ensure it's above other content */
+            margin: 10px auto;  /* ✅ Centers the message box with spacing */
+            border-radius: 8px;  /* ✅ Adds rounded corners */
         }
 
-        /* ✅ Space below the message box so page content isn't hidden */
-        body {
-            padding-top: 60px;  /* Adjust based on message box height */
-        }
-
-        /* ✅ Reduce font size slightly on small screens */
+        /* ✅ Ensure readability on small screens */
         @media (max-width: 600px) {
             #messageBox {
-                font-size: 16px;
-                padding: 8px;
+                font-size: 16px;  /* ✅ Slightly smaller text for mobile */
+                padding: 6px 10px;
             }
         }
+
         
         /* ✅ Set a maximum width for the table */
         table {
@@ -118,12 +113,14 @@
     </style>
 </head>
 <body>
-    <!-- Fixed Message Box -->
+
+    <h1 style="font-size: 24px;">食品熱量分析</h1>
+    
+    <!-- Scrollable Message Box Below Title -->
     <div id="messageBox" onclick="openMessageLink()">
         <p id="messageLine1"></p>
         <p id="messageLine2"></p>
     </div>
-    <h1 style="font-size: 24px;">食品熱量分析</h1>
     
     <div class="dropdown-container">
         <select id="categorySelect"></select>
@@ -187,7 +184,7 @@
             document.getElementById('messageLine2').textContent = currentMessage["Line 2"];
         }
 
-        // Function to open message link
+        // Function to open message link in a new tab
         function openMessageLink() {
             if (currentMessage["Link"]) {
                 window.open(currentMessage["Link"], '_blank');
