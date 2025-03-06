@@ -9,11 +9,11 @@
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         
-        /* ✅ Message Box - Now Scrolls with Page */
+        /* ✅ Message Box - Scrolls with Page */
         #messageBox {
             width: 90%;  /* ✅ Prevents full-width stretching */
             max-width: 600px;  /* ✅ Limits width to prevent too much spacing */
-            background-color: #f2feff;  /* ✅ light blue background */
+            background-color: #f2feff;  /* ✅ Light blue background */
             color: #83898a;  /* ✅ Gray text */
             text-align: center;
             padding: 4px 10px;
@@ -25,14 +25,23 @@
             border-radius: 8px;  /* ✅ Adds rounded corners */
         }
 
+        /* ✅ Reduce line spacing in the message box */
+        #messageBox p {
+            margin: 2px 0;  /* ✅ Reduces space between the two lines */
+            line-height: 1.2;  /* ✅ Reduces vertical spacing */
+        }
+
         /* ✅ Ensure readability on small screens */
         @media (max-width: 600px) {
             #messageBox {
                 font-size: 14px;  /* ✅ Slightly smaller text for mobile */
                 padding: 3px 5px;
             }
+    
+            #messageBox p {
+                line-height: 1.1;  /* ✅ Further reduce spacing on small screens */
+            }
         }
-
         
         /* ✅ Set a maximum width for the table */
         table {
