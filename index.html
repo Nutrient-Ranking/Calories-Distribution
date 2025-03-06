@@ -8,6 +8,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
+        
+        /* ✅ Fixed message box at the top */
+        #messageBox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffeb3b;  /* Yellow background */
+            color: #333;  /* Dark text */
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;  /* Ensure it's above other content */
+        }
+
+        /* ✅ Space below the message box so page content isn't hidden */
+        body {
+            padding-top: 60px;  /* Adjust based on message box height */
+        }
+
+        /* ✅ Reduce font size slightly on small screens */
+        @media (max-width: 600px) {
+            #messageBox {
+                font-size: 16px;
+                padding: 8px;
+            }
+        }
+        
         /* ✅ Set a maximum width for the table */
         table {
             max-width: 600px;  /* ✅ Limits the width of the table */
@@ -87,7 +118,11 @@
     </style>
 </head>
 <body>
-
+    <!-- Fixed Message Box -->
+    <div id="messageBox" onclick="openMessageLink()">
+        <p id="messageLine1"></p>
+        <p id="messageLine2"></p>
+    </div>
     <h1 style="font-size: 24px;">食品熱量分析</h1>
     
     <div class="dropdown-container">
@@ -121,7 +156,43 @@
         let foodSelect = document.getElementById('foodSelect');
         let calorieChart = null;
         let massChart = null;
-        
+
+        let messageData = [];  // Store CSV data
+        let currentMessage = {};  // Store selected message
+
+        // Load Message.csv
+        fetch('Message.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    dynamicTyping: true,
+                    quoteChar: '"',
+                    complete: function (results) {
+                        messageData = results.data;
+                        displayRandomMessage();  // Show a random message when loaded
+                    }
+                });
+            });
+
+        // Function to display a random message
+        function displayRandomMessage() {
+            if (messageData.length === 0) return;
+
+            let randomIndex = Math.floor(Math.random() * messageData.length);
+            currentMessage = messageData[randomIndex];
+
+            document.getElementById('messageLine1').textContent = currentMessage["Line 1"];
+            document.getElementById('messageLine2').textContent = currentMessage["Line 2"];
+        }
+
+        // Function to open message link
+        function openMessageLink() {
+            if (currentMessage["Link"]) {
+                window.open(currentMessage["Link"], '_blank');
+            }
+        }
 
         // Load CSV file
         fetch('food_data.csv')
