@@ -247,7 +247,8 @@
                             labels: { font: { size: 18 } }   // ✅ Fixed legend font size
                         },
                         tooltip: {
-                            bodyFont: { size: 18 },  // ✅ Fixed tooltip font size
+                            titleFont: { size: 18 },  // ✅ Match font size of nutrient names
+                            bodyFont: { size: 18 },   // ✅ Match font size of values
                             callbacks: {
                                 label: (tooltipItem) => tooltipItem.raw.toFixed(1) + '%'
                             }
@@ -278,7 +279,11 @@
                             labels: { font: { size: 18 } }   // ✅ Fixed legend font size
                         },
                         tooltip: {
-                            bodyFont: { size: 18 }   // ✅ Fixed tooltip font size
+                            titleFont: { size: 18 },  // ✅ Match font size of nutrient names
+                            bodyFont: { size: 18 },   // ✅ Match font size of values
+                            callbacks: {
+                                label: (tooltipItem) => tooltipItem.raw.toFixed(1) + '%'
+                            }
                         }
                     }
                 }
