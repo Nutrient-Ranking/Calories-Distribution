@@ -125,8 +125,8 @@
         }
 
         canvas {
-            width: 400px !important;
-            height: 400px !important;
+            width: 260px !important;
+            height: 260px !important;
             max-width: 100%;
         }
     </style>
@@ -289,25 +289,25 @@
            const centerTextPlugin = {
                id: 'centerText',
                beforeDraw: (chart) => {
-                   const ctx = chart.ctx;
                    const width = chart.width;
                    const height = chart.height;
+                   const ctx = chart.ctx;
                    ctx.restore();
 
                    const centerX = width / 2;
                    const centerY = height / 2;
 
                    ctx.font = 'bold 22px Arial';  
-                  ctx.textAlign = 'center';
+                   ctx.textAlign = 'center';
                    ctx.textBaseline = 'middle';
                    ctx.fillStyle = '#333';
 
                    if (chart.canvas.id === 'calorieChart') {
-                       ctx.fillText(`熱量`, centerX, centerY - 15);
-                       ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 15);
+                       ctx.fillText(`熱量`, centerX, centerY - 12);
+                       ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 12);
                    } else if (chart.canvas.id === 'massChart') {
-                       ctx.fillText(`重量`, centerX, centerY - 15);
-                       ctx.fillText(`${chart.options.centerText} g`, centerX, centerY + 15);
+                       ctx.fillText(`重量`, centerX, centerY - 12);
+                       ctx.fillText(`${chart.options.centerText} g`, centerX, centerY + 12);
                    }
 
                    ctx.save();
