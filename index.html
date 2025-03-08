@@ -297,7 +297,7 @@
                    const centerX = width / 2;
                    const centerY = height / 2;
 
-                   ctx.font = 'bold 22px Arial';  
+                   ctx.font = 'bold 20px Arial';  
                    ctx.textAlign = 'center';
                    ctx.textBaseline = 'middle';
                    ctx.fillStyle = '#333';
@@ -419,7 +419,7 @@
            calorieChart.options.centerText = totalCalories.toFixed(1);  
            calorieChart.update();
 
-           let totalMass = (mc + mp + mf + mw + ma).toFixed(1);
+           let totalMass = (mc + mp + mf + mw + ma).toFixed(0);
            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
            massChart.options.centerText = totalMass;  
            massChart.update();
