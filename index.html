@@ -278,7 +278,7 @@
            document.getElementById('proteinCal').textContent = ((Hp / CalculatedCalories) * 100).toFixed(1) + '%';
            document.getElementById('fatCal').textContent = ((Hf / CalculatedCalories) * 100).toFixed(1) + '%';
 
-           updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, totalCalories);
+           updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, CalculatedCalories);
        }
 
        // Update Charts
@@ -405,15 +405,15 @@
            });
        }
 
-       function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
+       function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, CalculatedCalories) {
            if (!calorieChart || !massChart) {
                console.error("Charts not initialized yet.");
                return;
            }
 
-           let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
-           let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
-           let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
+           let carbPercent = ((Hc / CalculatedCalories) * 100).toFixed(1);
+           let proteinPercent = ((Hp / CalculatedCalories) * 100).toFixed(1);
+           let fatPercent = ((Hf / CalculatedCalories) * 100).toFixed(1);
 
            calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
            calorieChart.options.centerText = totalCalories.toFixed(1);  
