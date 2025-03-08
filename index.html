@@ -47,11 +47,19 @@
         
         /* ✅ Set a maximum width for the table */
         table {
-            max-width: 600px;  /* ✅ Limits the width of the table */
-            width: 90%;  /* ✅ Makes the table responsive, adjusting to screen size */
-            margin: auto;  /* ✅ Centers the table on the page */
+            max-width: 600px;
+            width: 90%;
+            margin: auto;
             border-collapse: collapse;
         }
+
+        /* ✅ Apply text and background color for nutrient rows */
+        tr:nth-child(2) td { color: #4E824E; background-color: #99FF99; }  /* 醣類 */
+        tr:nth-child(3) td { color: #823434; background-color: #FF6666; }  /* 蛋白質 */
+        tr:nth-child(4) td { color: #7D6400; background-color: #FFCC00; }  /* 脂肪 */
+        tr:nth-child(5) td { color: #336680; background-color: #66CCFF; }  /* 水 */
+        tr:nth-child(6) td { color: #7A7A7A; background-color: #CCCCCC; }  /* 灰分 */
+
         /* ✅ Ensure font size matches the chart title (20px) */
         th {
             font-size: 20px;  /* ✅ Match chart title size */
@@ -275,19 +283,22 @@
 
        // Update Charts
        function initializeCharts() {
+           const nutrientColors = ['#4E824E', '#823434', '#7D6400', '#336680', '#7A7A7A'];  
+           const nutrientAreaColors = ['#99FF99', '#FF6666', '#FFCC00', '#66CCFF', '#CCCCCC'];  
+
            const centerTextPlugin = {
                id: 'centerText',
                beforeDraw: (chart) => {
+                   const ctx = chart.ctx;
                    const width = chart.width;
                    const height = chart.height;
-                   const ctx = chart.ctx;
                    ctx.restore();
 
                    const centerX = width / 2;
                    const centerY = height / 2;
 
-                   ctx.font = 'bold 28px Arial';  // 🔹 Larger text for better readability
-                   ctx.textAlign = 'center';
+                   ctx.font = 'bold 28px Arial';  
+                  ctx.textAlign = 'center';
                    ctx.textBaseline = 'middle';
                    ctx.fillStyle = '#333';
 
@@ -303,15 +314,13 @@
                }
            };
 
-           const nutrientColors = ['#4E824E', '#823434', '#7D6400', '#336680', '#7A7A7A'];
-
            calorieChart = new Chart(document.getElementById('calorieChart'), {
-              type: 'doughnut',
+               type: 'doughnut',
                data: {
                    labels: ['醣類', '蛋白質', '脂肪'],
                    datasets: [{
                        data: [0, 0, 0],
-                       backgroundColor: nutrientColors.slice(0, 3)  // 🔹 Use the first 3 colors
+                       backgroundColor: nutrientAreaColors.slice(0, 3)  
                    }]
                },
                options: {
@@ -321,18 +330,27 @@
                    centerText: '0.0',  
                    plugins: {
                        legend: { display: false }, 
-                       tooltip: { enabled: false }, 
+                       tooltip: {
+                           enabled: true,  // ✅ Enable tooltips to show hidden labels
+                           callbacks: {
+                               label: (tooltipItem) => {
+                                   const value = tooltipItem.raw;
+                                   const label = tooltipItem.label;
+                                   return `${label}: ${value.toFixed(1)}%`;
+                               }
+                           }
+                       },
                        datalabels: {
-                           color: (ctx) => nutrientColors[ctx.dataIndex],  // 🔹 Use corresponding colors
-                          font: { size: 16, weight: 'bold' },
+                           color: (ctx) => nutrientColors[ctx.dataIndex],  
+                           font: { size: 16, weight: 'bold' },
                            align: 'center',
                            anchor: 'center',
-                           backgroundColor: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 'transparent' : 'rgba(255, 255, 255, 0.7)',  // 🔹 Hide background for small values
-                           borderRadius: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 5,  // 🔹 Remove frame if value is <3%
-                           borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,  // 🔹 Hide border for small values
-                           borderColor: (ctx) => nutrientColors[ctx.dataIndex],  // 🔹 Use matching colors for label frames
+                           backgroundColor: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
+                           borderRadius: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 5,
+                           borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,
+                           borderColor: (ctx) => nutrientColors[ctx.dataIndex],
                            formatter: (value, ctx) => {
-                               if (value < 3) return '';  // 🔹 Hide values < 3%
+                               if (value < 3) return '';  
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + '%';
                            }
                        }
@@ -347,9 +365,9 @@
                    labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
                    datasets: [{
                        data: [0, 0, 0, 0, 0],
-                       backgroundColor: nutrientColors  // 🔹 Use all colors
+                       backgroundColor: nutrientAreaColors  
                    }]
-        },
+               },
                options: {
                    responsive: false,
                    maintainAspectRatio: true,
@@ -357,9 +375,18 @@
                    centerText: '100',  
                    plugins: {
                        legend: { display: false }, 
-                       tooltip: { enabled: false }, 
+                       tooltip: {
+                           enabled: true,  // ✅ Enable tooltips
+                           callbacks: {
+                               label: (tooltipItem) => {
+                                   const value = tooltipItem.raw;
+                                   const label = tooltipItem.label;
+                                   return `${label}: ${value.toFixed(1)} g`;
+                               }
+                           }
+                       },
                        datalabels: {
-                           color: (ctx) => nutrientColors[ctx.dataIndex],  // 🔹 Match table colors
+                           color: (ctx) => nutrientColors[ctx.dataIndex],  
                            font: { size: 16, weight: 'bold' },
                            align: 'center',
                            anchor: 'center',
@@ -368,7 +395,7 @@
                            borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,
                            borderColor: (ctx) => nutrientColors[ctx.dataIndex],
                            formatter: (value, ctx) => {
-                               if (value < 3) return '';  // 🔹 Hide values < 3%
+                               if (value < 3) return '';  
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + ' g';
                            }
                        }
