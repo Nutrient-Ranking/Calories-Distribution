@@ -416,10 +416,10 @@
            let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
 
            calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
-           calorieChart.options.centerText = totalCalories.toFixed(1);  
+           calorieChart.options.centerText = totalCalories.toFixed(0);  
            calorieChart.update();
 
-           let totalMass = (mc + mp + mf + mw + ma).toFixed(0);
+           let totalMass = (mc + mp + mf + mw + ma).toFixed(1);
            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
            massChart.options.centerText = totalMass;  
            massChart.update();
