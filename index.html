@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>食品熱量分析</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         
@@ -275,48 +277,54 @@
 
         // Update Charts
         function updateCharts(mc, mp, mf, mw, ma, Hc, Hp, Hf, totalCalories) {
-            if (!calorieChart || !massChart) {
-                console.error("Charts not initialized yet.");
-                return;  // Stop if charts are not ready
-            }
+           if (!calorieChart || !massChart) {
+               console.error("Charts not initialized yet.");
+               return;
+           }
 
-            // Ensure numeric values
-            mc = parseFloat(mc);
-            mp = parseFloat(mp);
-            mf = parseFloat(mf);
-            mw = parseFloat(mw);
-            ma = parseFloat(ma);
+           // Ensure numeric values
+           mc = parseFloat(mc);
+           mp = parseFloat(mp);
+           mf = parseFloat(mf);
+           mw = parseFloat(mw);
+           ma = parseFloat(ma);
 
-            Hc = parseFloat(Hc);
-            Hp = parseFloat(Hp);
-            Hf = parseFloat(Hf);
-            totalCalories = parseFloat(totalCalories);
+           Hc = parseFloat(Hc);
+           Hp = parseFloat(Hp);
+           Hf = parseFloat(Hf);
+           totalCalories = parseFloat(totalCalories);
 
-            if (totalCalories <= 0) {
-                console.warn("Total calories are zero or negative, skipping update.");
-                return;
-            }
+           if (totalCalories <= 0) {
+               console.warn("Total calories are zero or negative, skipping update.");
+               return;
+           }
 
-            // Calculate Calorie Percentages
-            let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
-            let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
-            let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
+           // Calculate percentages
+           let carbPercent = ((Hc / totalCalories) * 100).toFixed(1);
+           let proteinPercent = ((Hp / totalCalories) * 100).toFixed(1);
+           let fatPercent = ((Hf / totalCalories) * 100).toFixed(1);
 
-            // ✅ Update Charts Only When Ready
-            calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
-            calorieChart.options.plugins.title.text = `熱量 ${totalCalories.toFixed(1)} kcal`;
-            calorieChart.update();  // Refresh chart
+           // ✅ Update Data
+           calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
+           massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
 
-            let totalMass = (mc + mp + mf + mw + ma).toFixed(1);
-            massChart.data.datasets[0].data = [mc, mp, mf, mw, ma];
-            massChart.options.plugins.title.text = `重量 ${totalMass} g`;
-            massChart.update();  // Refresh chart
-        }
+           // ✅ Update Center Text
+           calorieChart.options.plugins.datalabels.align = 'center';  
+           calorieChart.options.plugins.datalabels.font = { size: 22 };  
+           calorieChart.options.plugins.datalabels.text = `熱量\n${totalCalories.toFixed(1)} kcal`;
 
+           massChart.options.plugins.datalabels.align = 'center';  
+           massChart.options.plugins.datalabels.font = { size: 22 };  
+           massChart.options.plugins.datalabels.text = `重量\n${(mc + mp + mf + mw + ma).toFixed(1)} g`;
+
+           // ✅ Refresh charts
+           calorieChart.update();
+           massChart.update();
+       }
 
         function initializeCharts() {
             calorieChart = new Chart(document.getElementById('calorieChart'), {
-                type: 'pie',
+                type: 'doughnut',  // ✅ Change to doughnut for center hole
                 data: {
                     labels: ['醣類', '蛋白質', '脂肪'],
                     datasets: [{
@@ -325,31 +333,28 @@
                     }]
                 },
                 options: {
-                    responsive: false,   // ✅ Keep chart responsive
-                    maintainAspectRatio: true,  // ✅ Prevent forced resizing
+                    responsive: false,   
+                    maintainAspectRatio: true,  
+                    cutout: '60%',  // ✅ Creates space for title inside the chart
                     plugins: {
-                        title: {
-                            display: true,
-                            text: '熱量 0 kcal',
-                            font: { size: 20 }    
-                        },
-                        legend: {
-                            labels: { font: { size: 18 } }   // ✅ Fixed legend font size
-                        },
-                        tooltip: {
-                            titleFont: { size: 18 },  // ✅ Match font size of nutrient names
-                            bodyFont: { size: 18 },   // ✅ Match font size of values
-                            callbacks: {
-                                label: (tooltipItem) => tooltipItem.raw.toFixed(1) + '%'
+                        legend: { display: false },  // ✅ Remove external legend
+                        tooltip: { enabled: false },  // ✅ Disable floating tooltips
+                        datalabels: {
+                            color: '#333',  // ✅ Label text color
+                            font: { size: 16 },
+                            formatter: (value, ctx) => {
+                                let label = ctx.chart.data.labels[ctx.dataIndex];  
+                                return label + '\n' + value.toFixed(1) + '%';  // ✅ Show label + value
                             }
                         }
                     }
-                }
+                },
+                plugins: [ChartDataLabels]  // ✅ Activate data labels
             });
 
             massChart = new Chart(document.getElementById('massChart'), {
-                type: 'pie',
-                data: {
+                type: 'doughnut',
+               data: {
                     labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
                     datasets: [{
                         data: [0, 0, 0, 0, 0], 
@@ -357,28 +362,26 @@
                     }]
                 },
                 options: {
-                    responsive: false,  // ✅ Keep chart responsive
-                    maintainAspectRatio: true,  // ✅ Prevent forced resizing
+                    responsive: false,  
+                    maintainAspectRatio: true,  
+                    cutout: '60%',  // ✅ Space for title inside the chart
                     plugins: {
-                        title: {
-                            display: true,
-                            text: '重量 100 g',
-                            font: { size: 20 }  // ✅ Fixed title font size
-                        },
-                        legend: {
-                            labels: { font: { size: 18 } }   // ✅ Fixed legend font size
-                        },
-                        tooltip: {
-                            titleFont: { size: 18 },  // ✅ Match font size of nutrient names
-                            bodyFont: { size: 18 },   // ✅ Match font size of values
-                            callbacks: {
-                                label: (tooltipItem) => tooltipItem.raw.toFixed(1) + ' g'
+                        legend: { display: false },
+                        tooltip: { enabled: false },
+                        datalabels: {
+                            color: '#333',
+                            font: { size: 16 },
+                            formatter: (value, ctx) => {
+                                let label = ctx.chart.data.labels[ctx.dataIndex];  
+                                return label + '\n' + value.toFixed(1) + ' g';
                             }
                         }
                     }
-                }
+                },
+                plugins: [ChartDataLabels]
             });
         }
+
 
        document.addEventListener("DOMContentLoaded", function() {
            initializeCharts();  // Ensure charts exist before updates
