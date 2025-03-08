@@ -273,8 +273,6 @@
            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, totalCalories);
        }
 
-
-
        // Update Charts
        function initializeCharts() {
            const centerTextPlugin = {
@@ -288,17 +286,17 @@
                    const centerX = width / 2;
                    const centerY = height / 2;
 
-                   ctx.font = 'bold 18px Arial';
+                   ctx.font = 'bold 28px Arial';  // 🔹 Larger text for better readability
                    ctx.textAlign = 'center';
                    ctx.textBaseline = 'middle';
                    ctx.fillStyle = '#333';
 
                    if (chart.canvas.id === 'calorieChart') {
-                       ctx.fillText(`熱量`, centerX, centerY - 10);
-                       ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 10);
+                       ctx.fillText(`熱量`, centerX, centerY - 15);
+                       ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 15);
                    } else if (chart.canvas.id === 'massChart') {
-                       ctx.fillText(`重量`, centerX, centerY - 10);
-                       ctx.fillText(`${chart.options.centerText} g`, centerX, centerY + 10);
+                       ctx.fillText(`重量`, centerX, centerY - 15);
+                       ctx.fillText(`${chart.options.centerText} g`, centerX, centerY + 15);
                    }
 
                    ctx.save();
@@ -318,20 +316,24 @@
                    responsive: false,
                    maintainAspectRatio: true,
                    cutout: '60%', 
-                   centerText: '0.0',  // Placeholder text
+                   centerText: '0.0',  
                    plugins: {
                        legend: { display: false }, 
                        tooltip: { enabled: false }, 
                        datalabels: {
                            color: '#333',
-                           font: { size: 14 },
-                           align: 'end',
-                           anchor: 'end',
+                           font: { size: 16, weight: 'bold' },  // 🔹 Larger labels inside chart
+                           align: 'center',  // 🔹 Position labels inside the doughnut
+                           anchor: 'center',
+                           backgroundColor: 'rgba(255, 255, 255, 0.7)', // 🔹 Improves contrast
+                           borderRadius: 5,  
+                           borderWidth: 1,  
+                           borderColor: '#000',  // 🔹 Black outline for better readability
                            formatter: (value, ctx) => {
-                               if (value < 3) return '';  // Hide very small values
+                               if (value < 3) return '';  // 🔹 Hide values < 3%
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + '%';
                            }
-                      }
+                       }
                    }
                },
                plugins: [centerTextPlugin, ChartDataLabels]
@@ -356,11 +358,15 @@
                        tooltip: { enabled: false }, 
                        datalabels: {
                            color: '#333',
-                           font: { size: 14 },
-                           align: 'end',
-                           anchor: 'end',
+                           font: { size: 16, weight: 'bold' },
+                           align: 'center',
+                           anchor: 'center',
+                           backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                           borderRadius: 5,
+                           borderWidth: 1,
+                           borderColor: '#000',
                            formatter: (value, ctx) => {
-                               if (value < 3) return '';  // Hide very small values
+                               if (value < 3) return '';  // 🔹 Hide values < 3%
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + ' g';
                            }
                        }
