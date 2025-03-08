@@ -342,7 +342,7 @@
                        },
                        datalabels: {
                            color: (ctx) => nutrientColors[ctx.dataIndex],  
-                           font: { size: 14, weight: 'bold' },
+                           font: { size: 12, weight: 'bold' },
                            align: 'center',
                            anchor: 'center',
                            backgroundColor: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
@@ -350,7 +350,7 @@
                            borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,
                            borderColor: (ctx) => nutrientColors[ctx.dataIndex],
                            formatter: (value, ctx) => {
-                               if (value < 3) return '';  
+                               if (value < 5) return '';  
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + '%';
                            }
                        }
@@ -387,7 +387,7 @@
                        },
                        datalabels: {
                            color: (ctx) => nutrientColors[ctx.dataIndex],  
-                           font: { size: 14, weight: 'bold' },
+                           font: { size: 12, weight: 'bold' },
                            align: 'center',
                            anchor: 'center',
                            backgroundColor: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
@@ -395,7 +395,7 @@
                            borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,
                            borderColor: (ctx) => nutrientColors[ctx.dataIndex],
                            formatter: (value, ctx) => {
-                               if (value < 3) return '';  
+                               if (value < 5) return '';  
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + ' g';
                            }
                        }
