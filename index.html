@@ -303,13 +303,15 @@
                }
            };
 
+           const nutrientColors = ['#4E824E', '#823434', '#7D6400', '#336680', '#7A7A7A'];
+
            calorieChart = new Chart(document.getElementById('calorieChart'), {
-               type: 'doughnut',
+              type: 'doughnut',
                data: {
                    labels: ['醣類', '蛋白質', '脂肪'],
                    datasets: [{
                        data: [0, 0, 0],
-                       backgroundColor: ['#99ff99', '#ff6666', '#ffcc00']
+                       backgroundColor: nutrientColors.slice(0, 3)  // 🔹 Use the first 3 colors
                    }]
                },
                options: {
@@ -321,14 +323,14 @@
                        legend: { display: false }, 
                        tooltip: { enabled: false }, 
                        datalabels: {
-                           color: '#333',
-                           font: { size: 16, weight: 'bold' },  // 🔹 Larger labels inside chart
-                           align: 'center',  // 🔹 Position labels inside the doughnut
+                           color: (ctx) => nutrientColors[ctx.dataIndex],  // 🔹 Use corresponding colors
+                          font: { size: 16, weight: 'bold' },
+                           align: 'center',
                            anchor: 'center',
-                           backgroundColor: 'rgba(255, 255, 255, 0.7)', // 🔹 Improves contrast
-                           borderRadius: 5,  
-                           borderWidth: 1,  
-                           borderColor: '#000',  // 🔹 Black outline for better readability
+                           backgroundColor: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 'transparent' : 'rgba(255, 255, 255, 0.7)',  // 🔹 Hide background for small values
+                           borderRadius: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 5,  // 🔹 Remove frame if value is <3%
+                           borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,  // 🔹 Hide border for small values
+                           borderColor: (ctx) => nutrientColors[ctx.dataIndex],  // 🔹 Use matching colors for label frames
                            formatter: (value, ctx) => {
                                if (value < 3) return '';  // 🔹 Hide values < 3%
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + '%';
@@ -345,9 +347,9 @@
                    labels: ['醣類', '蛋白質', '脂肪', '水', '灰分'],
                    datasets: [{
                        data: [0, 0, 0, 0, 0],
-                       backgroundColor: ['#99ff99', '#ff6666', '#ffcc00', '#66ccff', '#cccccc']
+                       backgroundColor: nutrientColors  // 🔹 Use all colors
                    }]
-               },
+        },
                options: {
                    responsive: false,
                    maintainAspectRatio: true,
@@ -357,14 +359,14 @@
                        legend: { display: false }, 
                        tooltip: { enabled: false }, 
                        datalabels: {
-                           color: '#333',
+                           color: (ctx) => nutrientColors[ctx.dataIndex],  // 🔹 Match table colors
                            font: { size: 16, weight: 'bold' },
                            align: 'center',
                            anchor: 'center',
-                           backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                           borderRadius: 5,
-                           borderWidth: 1,
-                           borderColor: '#000',
+                           backgroundColor: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 'transparent' : 'rgba(255, 255, 255, 0.7)',
+                           borderRadius: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 5,
+                           borderWidth: (ctx) => ctx.dataset.data[ctx.dataIndex] < 3 ? 0 : 1,
+                           borderColor: (ctx) => nutrientColors[ctx.dataIndex],
                            formatter: (value, ctx) => {
                                if (value < 3) return '';  // 🔹 Hide values < 3%
                                return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value.toFixed(1) + ' g';
