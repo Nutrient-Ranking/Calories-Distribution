@@ -173,10 +173,9 @@
         let calorieChart = null;
         let massChart = null;
 
-        let messageData = [];  // Store CSV data
-        let currentMessage = {};  // Store selected message
+        let messageData = [];  
+        let currentMessage = {};  
 
-        // Load Message.csv
         fetch('Message.csv')
             .then(response => response.text())
             .then(csvText => {
@@ -187,12 +186,11 @@
                     quoteChar: '"',
                     complete: function (results) {
                         messageData = results.data;
-                        displayRandomMessage();  // Show a random message when loaded
+                        displayRandomMessage();  
                     }
                 });
             });
 
-        // Function to display a random message
         function displayRandomMessage() {
             if (messageData.length === 0) return;
 
@@ -203,18 +201,16 @@
             document.getElementById('messageLine2').textContent = currentMessage["Line 2"];
         }
 
-        // Function to open message link in a new tab
         function openMessageLink() {
             if (currentMessage["Link"]) {
                 window.open(currentMessage["Link"], '_blank');
             }
         }
 
-        // Populate category dropdown
         function populateCategories() {
-            categorySelect.innerHTML = "";  // ✅ Clear previous categories to prevent duplicates
+            categorySelect.innerHTML = "";  
 
-            let categories = [...new Set(foodData.map(food => food.Category))]; // Unique categories
+            let categories = [...new Set(foodData.map(food => food.Category))]; 
             categories.forEach(category => {
                 let option = document.createElement('option');
                 option.value = category;
@@ -222,15 +218,13 @@
                 categorySelect.appendChild(option);
             });
 
-            // Load the first category's food items
-             if (categories.length > 0) {
+            if (categories.length > 0) {
                  populateFoods(categories[0]);
-             }
+            }
         }
 
-        // Populate food dropdown based on selected category
         function populateFoods(selectedCategory) {
-            foodSelect.innerHTML = ""; // Clear previous options
+            foodSelect.innerHTML = ""; 
             let filteredFoods = foodData.filter(food => food.Category === selectedCategory);
 
             filteredFoods.forEach(food => {
@@ -240,7 +234,6 @@
                 foodSelect.appendChild(option);
             });
 
-            // Automatically load the first food item
             if (filteredFoods.length > 0) {
                 displayFoodData(filteredFoods[0]);
             }
@@ -257,7 +250,6 @@
             if (selectedFood) displayFoodData(selectedFood);
         });
 
-        // Display food data
         function displayFoodData(food) {
            if (!food) return;
 
@@ -281,14 +273,13 @@
            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, CalculatedCalories);
        }
 
-       // Update Charts
        function initializeCharts() {
            const nutrientColors = ['#4E824E', '#823434', '#7D6400', '#336680', '#7A7A7A'];  
            const nutrientAreaColors = ['#99FF99', '#FF6666', '#FFCC00', '#66CCFF', '#CCCCCC'];  
 
            const centerTextPlugin = {
                id: 'centerText',
-               beforeDraw: (chart) => {
+               afterDraw: (chart) => {  
                    const width = chart.width;
                    const height = chart.height;
                    const ctx = chart.ctx;
@@ -297,22 +288,23 @@
                    const centerX = width / 2;
                    const centerY = height / 2;
 
-                   ctx.font = 'bold 20px Arial';  
+                   ctx.font = 'bold 22px Arial';  
                    ctx.textAlign = 'center';
                    ctx.textBaseline = 'middle';
-                   ctx.fillStyle = '#333';
+                   ctx.fillStyle = '#333';  
 
                    if (chart.canvas.id === 'calorieChart') {
-                       ctx.fillText(`熱量`, centerX, centerY - 12);
-                       ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 12);
+                       ctx.fillText(`熱量`, centerX, centerY - 10);  
+                       ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 20); 
                    } else if (chart.canvas.id === 'massChart') {
-                       ctx.fillText(`重量`, centerX, centerY - 12);
-                       ctx.fillText(`${chart.options.centerText} g`, centerX, centerY + 12);
+                       ctx.fillText(`重量`, centerX, centerY - 10);
+                       ctx.fillText(`${chart.options.centerText} g`, centerX, centerY + 20);
                    }
 
                    ctx.save();
                }
            };
+
 
            calorieChart = new Chart(document.getElementById('calorieChart'), {
                type: 'doughnut',
@@ -331,7 +323,7 @@
                    plugins: {
                        legend: { display: false }, 
                        tooltip: {
-                           enabled: true,  // ✅ Enable tooltips to show hidden labels
+                           enabled: true,  
                            callbacks: {
                                label: (tooltipItem) => {
                                    const value = tooltipItem.raw;
@@ -376,7 +368,7 @@
                    plugins: {
                        legend: { display: false }, 
                        tooltip: {
-                           enabled: true,  // ✅ Enable tooltips
+                           enabled: true, 
                            callbacks: {
                                label: (tooltipItem) => {
                                    const value = tooltipItem.raw;
@@ -426,8 +418,8 @@
        }
 
        document.addEventListener("DOMContentLoaded", function() {
-           initializeCharts();  // Ensure charts exist before updates
-           fetchData();  // Now fetch data and populate dropdowns AFTER charts are initialized
+           initializeCharts();  
+           fetchData();  
        });
 
        function fetchData() {
@@ -446,7 +438,6 @@
                    });
                });
        }
-
  
     </script>
 
