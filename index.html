@@ -266,13 +266,16 @@
 
            let CalculatedCalories = Hc + Hp + Hf;
 
-           document.getElementById('pageTitle').textContent = `總熱量 ${totalCalories.toFixed(1)} kcal`;
            document.getElementById('carbCal').textContent = ((Hc / CalculatedCalories) * 100).toFixed(1) + '%';
            document.getElementById('proteinCal').textContent = ((Hp / CalculatedCalories) * 100).toFixed(1) + '%';
            document.getElementById('fatCal').textContent = ((Hf / CalculatedCalories) * 100).toFixed(1) + '%';
 
+           // ✅ Update Page Title with Total Calories
+           document.getElementById('pageTitle').textContent = `總熱量 ${totalCalories.toFixed(1)} kcal`;
+
            updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, CalculatedCalories);
        }
+
 
        function initializeCharts() {
            const nutrientColors = ['#4E824E', '#823434', '#7D6400', '#336680', '#7A7A7A'];  
