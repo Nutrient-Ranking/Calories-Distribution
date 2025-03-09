@@ -294,7 +294,7 @@
                    ctx.fillStyle = '#333';  
 
                    if (chart.canvas.id === 'calorieChart') {
-                       ctx.fillText(`修正熱量`, centerX, centerY - 10);  
+                       ctx.fillText(`修正熱量`, centerX, centerY - 15);  
                        ctx.fillText(`${chart.options.centerText} kcal`, centerX, centerY + 20); 
                    } else if (chart.canvas.id === 'massChart') {
                        ctx.fillText(`重量`, centerX, centerY - 10);
@@ -408,7 +408,7 @@
            let fatPercent = ((Hf / CalculatedCalories) * 100).toFixed(1);
 
            calorieChart.data.datasets[0].data = [parseFloat(carbPercent), parseFloat(proteinPercent), parseFloat(fatPercent)];
-           calorieChart.options.centerText = CalculatedCalories.toFixed(1);  
+           calorieChart.options.centerText = CalculatedCalories.toFixed(0);  
            calorieChart.update();
 
            let totalMass = (mc + mp + mf + mw + ma).toFixed(1);
