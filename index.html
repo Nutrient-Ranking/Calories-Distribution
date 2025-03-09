@@ -144,7 +144,7 @@
         <select id="foodSelect"></select>
     </div>
 
-    <h1 style="font-size: 24px;">食品熱量分析</h1>
+    <h1 id="pageTitle" style="font-size: 24px;">總熱量 - kcal</h1>
 
     <!-- Charts Row -->
     <div class="chart-container">
@@ -266,6 +266,7 @@
 
            let CalculatedCalories = Hc + Hp + Hf;
 
+           document.getElementById('pageTitle').textContent = `總熱量 ${totalCalories.toFixed(1)} kcal`;
            document.getElementById('carbCal').textContent = ((Hc / CalculatedCalories) * 100).toFixed(1) + '%';
            document.getElementById('proteinCal').textContent = ((Hp / CalculatedCalories) * 100).toFixed(1) + '%';
            document.getElementById('fatCal').textContent = ((Hf / CalculatedCalories) * 100).toFixed(1) + '%';
