@@ -178,6 +178,11 @@
 
         let AtwaterData = {};  // Store Atwater coefficients
 
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
         function loadAtwaterData() {
             fetch('Atwater.csv')
                 .then(response => response.text())
@@ -235,9 +240,9 @@
         }
 
         function populateCategories() {
-            categorySelect.innerHTML = "";  
+            categorySelect.innerHTML = "";  // Clear previous categories
+            let categories = [...new Set(foodData.map(food => food.Category))]; // Unique categories
 
-            let categories = [...new Set(foodData.map(food => food.Category))]; 
             categories.forEach(category => {
                 let option = document.createElement('option');
                 option.value = category;
@@ -245,13 +250,33 @@
                 categorySelect.appendChild(option);
             });
 
-            if (categories.length > 0) {
-                 populateFoods(categories[0]);
+            let defaultCategory = "豆類";  // Default category
+            let selectedFood = "毛豆仁";   // Default food
+
+            // Check if the URL provides a custom selection
+            let foodParam = getQueryParam("food");
+            let rowParam = getQueryParam("row");
+
+            if (foodParam) {
+                let matchingFood = foodData.find(food => food["Food Name"] === foodParam);
+                if (matchingFood) {
+                    defaultCategory = matchingFood.Category;
+                    selectedFood = foodParam;
+                }
+            } else if (rowParam) {
+                let rowIndex = parseInt(rowParam);
+                if (!isNaN(rowIndex) && rowIndex >= 0 && rowIndex < foodData.length) {
+                    defaultCategory = foodData[rowIndex].Category;
+                    selectedFood = foodData[rowIndex]["Food Name"];
+                }
             }
+
+            categorySelect.value = defaultCategory;
+            populateFoods(defaultCategory, selectedFood);
         }
 
-        function populateFoods(selectedCategory) {
-            foodSelect.innerHTML = ""; 
+        function populateFoods(selectedCategory, defaultFood = null) {
+            foodSelect.innerHTML = "";  // Clear previous options
             let filteredFoods = foodData.filter(food => food.Category === selectedCategory);
 
             filteredFoods.forEach(food => {
@@ -261,9 +286,15 @@
                 foodSelect.appendChild(option);
             });
 
-            if (filteredFoods.length > 0) {
-                displayFoodData(filteredFoods[0]);
+            if (defaultFood && filteredFoods.some(food => food["Food Name"] === defaultFood)) {
+                foodSelect.value = defaultFood;
+            } else {
+                foodSelect.selectedIndex = 0;
             }
+
+            // Display the selected food's data
+            let selectedFood = foodData.find(food => food["Food Name"] === foodSelect.value);
+            if (selectedFood) displayFoodData(selectedFood);
         }
 
         // Update food list when category changes
