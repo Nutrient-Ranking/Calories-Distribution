@@ -176,6 +176,33 @@
         let messageData = [];  
         let currentMessage = {};  
 
+        let AtwaterData = {};  // Store Atwater coefficients
+
+        function loadAtwaterData() {
+            fetch('Atwater.csv')
+                .then(response => response.text())
+                .then(csvText => {
+                    Papa.parse(csvText, {
+                        header: true,
+                        skipEmptyLines: true,
+                        dynamicTyping: true,
+                        complete: function (results) {
+                            results.data.forEach(row => {
+                                AtwaterData[row.AtwaterCode] = {
+                                    Cprotein: parseFloat(row.Cprotein),
+                                    Cfat: parseFloat(row.Cfat),
+                                    Ccarb: parseFloat(row.Ccarb)
+                                };
+                            });
+                        }
+                    });
+                });
+        }
+
+        // Call this function at startup
+        loadAtwaterData();
+        // End of loading Atwater data 
+        
         fetch('Message.csv')
             .then(response => response.text())
             .then(csvText => {
@@ -190,7 +217,7 @@
                     }
                 });
             });
-
+        
         function displayRandomMessage() {
             if (messageData.length === 0) return;
 
@@ -260,21 +287,34 @@
            document.getElementById('ash').textContent = food["Ash (g)"].toFixed(2);
 
            let totalCalories = parseFloat(food["Calorie (kcal)"]);
-           let Hc = parseFloat(food["Carbs (g)"]) * 4;
-           let Hp = parseFloat(food["Protein (g)"]) * 3.9;
-           let Hf = parseFloat(food["Fat (g)"]) * 8.9;
+           let AtwaterCode = food["AtwaterCode"];  // Get the AtwaterCode for this food
 
-           let CalculatedCalories = Hc + Hp + Hf;
+           if (AtwaterData[AtwaterCode]) {
+               let Cprotein = AtwaterData[AtwaterCode].Cprotein;
+               let Cfat = AtwaterData[AtwaterCode].Cfat;
+               let Ccarb = AtwaterData[AtwaterCode].Ccarb;
 
-           document.getElementById('carbCal').textContent = ((Hc / CalculatedCalories) * 100).toFixed(1) + '%';
-           document.getElementById('proteinCal').textContent = ((Hp / CalculatedCalories) * 100).toFixed(1) + '%';
-           document.getElementById('fatCal').textContent = ((Hf / CalculatedCalories) * 100).toFixed(1) + '%';
+               let Mc = parseFloat(food["Carbs (g)"]);
+               let Mp = parseFloat(food["Protein (g)"]);
+               let Mf = parseFloat(food["Fat (g)"]);
 
-           // ✅ Update Page Title with Total Calories
-           document.getElementById('pageTitle').textContent = `總熱量 ${totalCalories.toFixed(1)} kcal`;
+               let Hc = Mc * Ccarb;
+               let Hp = Mp * Cprotein;
+               let Hf = Mf * Cfat;
 
-           updateCharts(food["Carbs (g)"], food["Protein (g)"], food["Fat (g)"], food["Water (g)"], food["Ash (g)"], Hc, Hp, Hf, CalculatedCalories);
-       }
+               let CalculatedCalories = Hc + Hp + Hf;
+
+               document.getElementById('carbCal').textContent = ((Hc / CalculatedCalories) * 100).toFixed(1) + '%';
+               document.getElementById('proteinCal').textContent = ((Hp / CalculatedCalories) * 100).toFixed(1) + '%';
+               document.getElementById('fatCal').textContent = ((Hf / CalculatedCalories) * 100).toFixed(1) + '%';
+
+               // ✅ Update Page Title with Total Calories
+               document.getElementById('pageTitle').textContent = `總熱量 ${totalCalories.toFixed(1)} kcal`;
+
+               updateCharts(Mc, Mp, Mf, parseFloat(food["Water (g)"]), parseFloat(food["Ash (g)"]), Hc, Hp, Hf, CalculatedCalories);
+           }
+        }
+
 
 
        function initializeCharts() {
